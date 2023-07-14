@@ -1,32 +1,38 @@
-using Oscar
 import Oscar.save_internal
 import Oscar.load_internal
 import Oscar.encodeType
+import Oscar.registerSerializationType
+import Oscar.@registerSerializationType
+import Oscar.PolyRingElem
 
+struct MyNewType{PolyType <: PolyRingElem} 
+    p::PolyType
 
-struct MyNewType
-    p::PolyElem
-    v::Vector
+    function MyNewType(p::PolyRingElem)
+        return new{typeof(p)}(p)
+    end
 end
+using Oscar
 
-struct MyNewType
-    p::PolyElem
-    v::Vector
-end
-
-encodeType(T::Type{MyNewType}) = "MyNewType"
+encodeType(MyNewType) = "MyNewtype"
+@registerSerializationType(MyNewType, "MyNewType")
 
 function save_internal(s::Oscar.SerializerState, new_elem::MyNewType)
     d = Dict(
         :p => save_internal(s, new_elem.p),
-        :v => save_internal(s, new_elem.v)
     )
     return d
 end
 
-Qx, x = QQ["x"]
-t = MyNewType(x^2, [1, 1])
+function load_internal(s::Oscar.DeserializerState, ::Type{MyNewType}, dict::Dict)
+    p = Oscar.load_internal(s, PolyElem, dict[:p])
+    return MyNewType(p)
+end
 
-save("./test.json", t)
+function test(path::String)
+    Qx, x = QQ["x"]
+    t = MyNewType(x^2)
+    save(path, t)
+end
 
  

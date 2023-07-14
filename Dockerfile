@@ -46,7 +46,7 @@ RUN julia --project=. setup.jl
 
 
 #######
-
+RUN mkdir -p /home/test-files/
 RUN mkdir -p /home/src/
 COPY src /home/src/
 WORKDIR /home/src

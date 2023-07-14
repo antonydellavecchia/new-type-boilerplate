@@ -1,1 +1,1 @@
-docker build -t tobias/necii .
+docker build -t oscar/new-type-boilerplate .

@@ -1,1 +1,1 @@
-docker run -it -v $(pwd)/src:/home/src/ tobias/necii
+docker run -it -v $(pwd)/:/home/ oscar/new-type-boilerplate
